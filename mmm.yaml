@@ -3,3 +3,106 @@
   tasks:
     - name: Run setup module
       ansible.builtin.setup:
+
+- name: Initialize APT
+  hosts: local
+  tasks:
+    - name: Update APT cache
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 43200
+    - name: Upgrade system
+      ansible.builtin.apt:
+        upgrade: yes
+
+- name: Install general
+  hosts: local
+  tasks:
+    - name: Install Curl
+      ansible.builtin.apt:
+        name: curl
+        state: latest
+    - name: Install Git
+      ansible.builtin.apt:
+        name: git
+        state: latest
+    - name: Install GNOME keyring
+      ansible.builtin.apt:
+        name: gnome-keyring
+        state: latest
+    - name: Install wget
+      ansible.builtin.apt:
+        name: wget
+        state: latest
+    - name: Install gpg
+      ansible.builtin.apt:
+        name: gpg
+        state: latest
+    - name: Install apt-transport-https
+      ansible.builtin.apt:
+        name: apt-transport-https
+        state: latest
+    - name: Install gcc
+      ansible.builtin.apt:
+        name: gcc
+        state: latest
+    - name: Install make
+      ansible.builtin.apt:
+        name: make
+        state: latest
+      
+
+- name: mmm script specific actions
+  hosts: local
+  tasks:
+    - name: Install Curl
+      ansible.builtin.apt:
+        name: curl
+        state: present
+    - name: Install Git
+      ansible.builtin.apt:
+        name: git
+        state: present
+
+- name: Install VSCode
+  hosts: local
+  tasks:
+    - name: Install wget
+      ansible.builtin.apt:
+        name: wget
+        state: present
+    - name: Install gpg
+      ansible.builtin.apt:
+        name: gpg
+        state: present
+    - name: Install apt-transport-https
+      ansible.builtin.apt:
+        name: apt-transport-https
+        state: present
+    - name: Add VS Code GPG key
+      ansible.builtin.shell: |
+        wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
+        sudo install -D -o root -g root -m 644 microsoft.gpg /usr/share/keyrings/microsoft.gpg
+        rm -f microsoft.gpg
+      args:
+        creates: /usr/share/keyrings/microsoft.gpg
+    - name: Add VS Code repo
+      ansible.builtin.deb822_repository:
+        name: vscode
+        types: deb
+        uris: https://packages.microsoft.com/repos/code
+        suites: stable
+        components: main
+        architectures:
+          - amd64
+          - arm64
+          - armhf
+        signed_by: /usr/share/keyrings/microsoft.gpg
+    - name: Install VS Code
+      ansible.builtin.apt:
+        name: code
+        update_cache: yes
+        state: latest
+
+    # SUDOERS FILE THINGY FAST
+    # NVIDIA LOGIC, DOESNT HAVE To be perfect since it will change when the computer changes possibly
