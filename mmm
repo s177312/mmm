@@ -1,0 +1,156 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# SCRIPT DIRECTORY FUNCTION FOR GLOBALS
+function getScriptDir() {
+    # Source: https://stackoverflow.com/questions/59895/how-do-i-get-the-directory-where-a-bash-script-is-located-from-within-the-script    
+    
+    local SOURCE_PATH="${BASH_SOURCE[0]}"
+    local SYMLINK_DIR
+    local SCRIPT_DIR
+
+    while [ -L "$SOURCE_PATH" ]; do
+        SYMLINK_DIR="$( cd -P "$( dirname "$SOURCE_PATH" )" >/dev/null 2>&1 && pwd )"
+        SOURCE_PATH="$( readlink "$SOURCE_PATH" )"
+        
+        if [[ $SOURCE_PATH != /* ]]; then
+            SOURCE_PATH=$SYMLINK_DIR/$SOURCE_PATH
+        fi
+    done
+
+    SCRIPT_DIR="$( cd -P "$( dirname "$SOURCE_PATH" )" >/dev/null 2>&1 && pwd )"
+
+    echo "$SCRIPT_DIR"
+}
+
+
+# GLOBALS
+APT_UPDATED=1
+SCRIPT_DIR="$( getScriptDir )"
+VARS_FILE_PATH=""
+
+# FUNCTIONS
+function commandExists() {
+    command -v "${1}" >/dev/null 2>&1
+}
+
+function aptUpdate() {
+    if [ "${APT_UPDATED}" -eq 1 ]; then
+        sudo apt-get update
+        APT_UPDATED=0
+    fi
+}
+
+function aptInstall() {
+    printNotice "${1} not found! ${1} will be installed via APT!"
+
+    if ! askToContinue; then
+        exit 0
+    fi
+
+    aptUpdate
+    sudo apt-get install --assume-yes --show-progress "$1"
+}
+
+function debianCheck() {
+    if ! grep --extended-regexp --quiet --ignore-case '^(ID|ID_LIKE)=.*debian' /etc/os-release 2>/dev/null; then
+        printNotice 'Not a Debian based OS! Script may function incorrectly!'
+
+        if ! askToContinue; then
+            exit 0
+        fi
+    fi
+}
+
+function argCheck() {
+    if [ -z "${1-}" ]; then
+        printError 'Vars file path is not specified! Please specify vars file path as the 1st argument!'
+        exit 1
+    elif [ ! -f "$1" ]; then
+        printError 'Vars file path was specified, but there seems to be no file at that location!'
+        exit 1
+    fi
+
+    VARS_FILE_PATH="$1"
+}
+
+function isCorrectRepo() {
+    local current_repo="$(git -C "${SCRIPT_DIR}" config --get remote.origin.url 2>/dev/null)"
+
+    case "$current_repo" in
+    *s177312/mmm*)
+        return 0
+        ;;
+    *)
+        return 1
+        ;;
+    esac
+}
+
+function printError() {
+    printf "[ERROR] %s\n" "$1" >&2
+}
+
+function printNotice() {
+    printf "[NOTICE] %s\n" "$1" >&2
+}
+
+function askToContinue() {
+    local answer
+
+    read -r -p "[INPUT] Do you want to continue? [y/N]: " 'answer'
+
+    case "$answer" in
+        [Yy]|[Yy][Ee][Ss])
+            return 0;
+            ;;
+        *)
+            return 1;
+            ;;
+    esac
+}
+
+function runAnsible() {
+    pushd "${SCRIPT_DIR}" >/dev/null
+
+    if ! ansible-playbook -v --ask-become-pass --ask-vault-password mmm.yaml --extra-vars "@${VARS_FILE_PATH}"; then
+        exit 1
+    fi
+
+    popd >/dev/null
+}
+
+function setupTmpRepo() {
+    SCRIPT_DIR="$( mktemp -d )"
+
+    git clone 'https://github.com/s177312/mmm.git' "${SCRIPT_DIR}"
+}
+
+# ENTRY
+function main() {
+    printNotice 'Running mmm script!'
+
+    argCheck "$@"
+
+    debianCheck
+
+    if ! commandExists 'git'; then
+        aptInstall 'git'
+    fi
+
+    if ! commandExists 'ansible-playbook'; then
+        aptInstall 'ansible'
+    fi
+
+
+    if ! isCorrectRepo; then
+        setupTmpRepo
+    fi
+
+    runAnsible
+
+    printNotice 'mmm script finished!'
+}
+
+main "$@"

@@ -1,0 +1,5 @@
+- name: Gather facts
+  hosts: local
+  tasks:
+    - name: Run setup module
+      ansible.builtin.setup:
