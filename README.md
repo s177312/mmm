@@ -5,7 +5,7 @@ Set up and manage personal Debian-based host.
 1. Save your vault file somewhere.
 2. Run command:
 ```
-bash <(curl -fsSL https://raw.githubusercontent.com/s177312/mmm/refs/heads/main/mmm) ${vault_file_path}
+bash <(curl -fsSL https://raw.githubusercontent.com/s177312/mmm/refs/heads/main/mmm) ${vault_file_absolute_path}
 ```
 
 ## Notes

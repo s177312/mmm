@@ -28,7 +28,7 @@ function getScriptDir() {
 # GLOBALS
 APT_UPDATED=1
 SCRIPT_DIR="$( getScriptDir )"
-VARS_FILE_PATH=""
+VAULT_FILE_PATH=""
 
 # FUNCTIONS
 function commandExists() {
@@ -65,14 +65,17 @@ function debianCheck() {
 
 function argCheck() {
     if [ -z "${1-}" ]; then
-        printError 'Vars file path is not specified! Please specify vars file path as the 1st argument!'
+        printError 'Vault file path is not specified! Please specify vault file absolute path as the 1st argument!'
+        exit 1
+    elif [ "${1:0:1}" != "/" ]; then
+        printError 'Vault file path was specified, but it is not an absolute path!'
         exit 1
     elif [ ! -f "$1" ]; then
-        printError 'Vars file path was specified, but there seems to be no file at that location!'
+        printError 'Vault file path was specified, but there seems to be no file at that location!'
         exit 1
     fi
 
-    VARS_FILE_PATH="$1"
+    VAULT_FILE_PATH="$1"
 }
 
 function isCorrectRepo() {
@@ -114,7 +117,7 @@ function askToContinue() {
 function runAnsible() {
     pushd "${SCRIPT_DIR}" >/dev/null
 
-    if ! ansible-playbook -v --ask-become-pass --ask-vault-password mmm.yaml --extra-vars "@${VARS_FILE_PATH}"; then
+    if ! ansible-playbook -v --ask-become-pass --ask-vault-password mmm.yaml --extra-vars "@${VAULT_FILE_PATH}"; then
         exit 1
     fi
 
