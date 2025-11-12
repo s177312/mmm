@@ -1,0 +1,9 @@
+---
+- name: Install VScode using .deb package
+  block:
+    - ansible.builtin.get_url:
+        url: https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
+        dest: /tmp/code.deb
+    - ansible.builtin.apt:
+        deb: /tmp/code.deb
+  when: "'code' not in ansible_facts.packages"

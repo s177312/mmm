@@ -1,0 +1,38 @@
+---
+- name: Setup non-free apt repos for nvidia
+  block:
+    - ansible.builtin.deb822_repository:
+        name: debian-non-free
+        types:
+          - deb
+          - deb-src
+        uris: http://deb.debian.org/debian/
+        suites:
+          - trixie
+          - trixie-updates
+        components: non-free
+        signed_by: /usr/share/keyrings/debian-archive-keyring.gpg
+    - ansible.builtin.deb822_repository:
+        name: debian-sec-non-free
+        types:
+          - deb
+          - deb-src
+        uris: https://security.debian.org/debian-security
+        suites: trixie-security
+        components: non-free
+        signed_by: /usr/share/keyrings/debian-archive-keyring.gpg
+    - ansible.builtin.apt:
+        update_cache: yes
+
+- name: Install linux Headers
+  ansible.builtin.apt:
+    name: "linux-headers-{{ deb_arch }}"
+    state: present
+
+- name: Install nvidia packages
+  ansible.builtin.apt:
+    name: 
+      - nvidia-kernel-dkms
+      - nvidia-driver
+      - firmware-misc-nonfree
+    state: present

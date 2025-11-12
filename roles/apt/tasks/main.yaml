@@ -1,0 +1,51 @@
+---
+- name: Setup apt repos
+  block:
+    - ansible.builtin.copy:
+        content: ""
+        dest: /etc/apt/sources.list
+    - ansible.builtin.deb822_repository:
+        name: debian
+        types:
+          - deb
+          - deb-src
+        uris: http://deb.debian.org/debian/
+        suites:
+          - trixie
+          - trixie-updates
+        components: main contrib non-free-firmware
+        signed_by: /usr/share/keyrings/debian-archive-keyring.gpg
+    - ansible.builtin.deb822_repository:
+        name: debian-sec
+        types:
+          - deb
+          - deb-src
+        uris: https://security.debian.org/debian-security
+        suites: trixie-security
+        components: main contrib non-free-firmware
+        signed_by: /usr/share/keyrings/debian-archive-keyring.gpg
+
+- name: Register apt setup check
+  ansible.builtin.stat:
+    path: "{{ setup_file }}"
+  register: setup
+
+- name: Run one-time apt setup
+  block:
+    - ansible.builtin.apt:
+        update_cache: true
+    - ansible.builtin.apt:
+        upgrade: true
+    - file:
+        path: "{{ setup_file }}"
+        state: touch
+  when: not setup.stat.exists
+
+- name: Install packages
+  ansible.builtin.apt:
+    name: "{{ packages }}"
+    state: present
+
+- name: Gather package facts
+  ansible.builtin.package_facts:
+    manager: auto

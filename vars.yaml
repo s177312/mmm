@@ -1,0 +1,16 @@
+---
+apt:
+  setup_file: /etc/.ansible_apt_setup
+  packages:
+    - apt-transport-https
+    - bash
+    - curl
+    - wget
+    - git
+    - gnome-keyring
+    - gpg
+    - gcc
+    - make
+    - sudo
+user:
+  name: silk
