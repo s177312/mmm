@@ -1,14 +1,21 @@
 ---
-- name: Setup apt
-  hosts: localhost
-  connection: local
+- name: setup
+  hosts: local
   become: true
-  roles:
-    - role: apt
-      vars:
-        setup_file: "{{ apt.setup_file }}"
-        packages: "{{ apt.packages }}"
+  tasks:
+    - name: setup tasks
+      ansible.builtin.setup:
 
+#- name: Setup apt
+#  hosts: localhost
+#  connection: local
+#  become: true
+#  roles:
+#    - role: apt
+#      vars:
+#        setup_file: "{{ apt.setup_file }}"
+#        packages: "{{ apt.packages }}"
+#
 #- name: Setup github-cli
 #  hosts: local
 #  roles:
@@ -32,4 +39,3 @@
 #  hosts: local
 #  roles:
 #    - role: vscode
-#

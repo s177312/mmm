@@ -4,6 +4,13 @@ Ansible configuration for setting up new Debian machine.
 
 
 ## Usage
+
 1. Clone or download the repository to the machine
-2. Run `ansible-playbook --verbose --ask-become-pass --ask-vault-password --extra-vars '@./vars.yaml' --extra-vars '@./vault.yaml' mmm.yaml` while in the repository root directory
-3. Done!
+2. Install ansible using command `apt install ansible`, needs root privileges
+3. Run `ansible-playbook --verbose --ask-become-pass --ask-vault-password --extra-vars '@./vars.yaml' --extra-vars '@./vault.yaml' mmm.yaml` while in the repository's root directory
+4. Done!
+
+## TODO
+- Script for setting up virtualenv stuffz and custom vars which should be specified beforehand
+- virtualenv for ansible
+- if virtualenv is started create become and vault password files, if exit, delete become and vault password files

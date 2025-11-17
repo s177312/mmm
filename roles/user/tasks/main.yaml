@@ -1,0 +1,7 @@
+---
+- name: Manage user
+  ansible.builtin.user:
+    name: "{{ sudo_user }}"
+    groups: sudo
+    append: true
+  when: "'sudo' in ansible_facts.packages"

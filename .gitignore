@@ -1,0 +1,5 @@
+group_vars/local/.custom.yaml
+.become_password.txt
+.vault_password.txt
+
+.venv
