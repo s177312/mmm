@@ -130,6 +130,7 @@ function readCustomVars2File() {
 
 function main() {
     local recreateVenv=
+    local goInteractive=
 
     cd "${SCRIPT_DIR}"
 
@@ -168,9 +169,19 @@ function main() {
         )
     fi
 
-    source .venv/bin/activate
+    read -r -p "Do you wish to open interactive mode for manual ansible execution? If no mmm.yaml is ran once! [y/N]: " 'goInteractive'
 
-    bash --noprofile --norc
+    case "${goInteractive}" in
+        [Yy]|[Yy][Ee][Ss])
+            source .venv/bin/activate
+
+            bash --noprofile --norc
+            ;;
+        *)
+            source .venv/bin/activate
+            ansible-playbook mmm.yaml
+            ;;
+    esac
 }
 
 main "${@}"
