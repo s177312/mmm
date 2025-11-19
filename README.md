@@ -5,8 +5,8 @@ Ansible configuration for setting up new Debian machine.
 
 ## Usage
 
-1. Clone or download the repository to the machine
-2. Run script mmm.sh
+1. Clone the repo to your machine.
+2. Run script mmm.sh.
 3. You are done!
 
 
