@@ -15,3 +15,10 @@ Ansible configuration for setting up new Debian machine.
 
 - Using *su* method to become in Ansible since on a fresh Debian 13 installation, base user is not in *sudo* group.
 - The roles are built so that, every role could be ran solo and it should still work. This means, that there is some repetition when running tasks and trying to write things so that tasks are skipped when possible should be prioritised.
+
+
+## Todo
+
+- Add tags for every separate play in playbook and add tags argument for mmm.sh script.
+- Gathering package facts to make every role atomic is slow as shit, so pretty sure using dpkg command somehting something is better with a registered variable. Make it happen later.
+
