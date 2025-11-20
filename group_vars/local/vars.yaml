@@ -1,7 +1,7 @@
 ---
 apt:
   intial_upgrade_file: /etc/.ansible_initial_apt_upgrade
-  packages:
+  standalone_packages:
     - bash
     - curl
     - wget
@@ -13,3 +13,6 @@ apt:
     - sudo
     - python3
     - python3-pip
+vscode:
+  extensions:
+    - mikestead.dotenv

@@ -1,9 +1,55 @@
 ---
-- name: Install VScode using .deb package
+- name: Install required packages
+  ansible.builtin.apt:
+    name:
+      - wget
+      - gpg
+    state: present
+
+- name: Gather package facts
+  ansible.builtin.package_facts:
+    manager: apt
+
+- name: Setup vscode repo
   block:
-    - ansible.builtin.get_url:
-        url: https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
-        dest: /tmp/code.deb
-    - ansible.builtin.apt:
-        deb: /tmp/code.deb
+    - name: Download vscode key and dearmor
+      ansible.builtin.command: 
+        cmd: wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
+    - name: Create vscode keyring
+      ansible.builtin.command:
+        cmd: install -D -o root -g root -m 644 microsoft.gpg /usr/share/keyrings/microsoft.gpg
+    - name: Cleanup downloaded key
+      ansible.builtin.command:
+        cmd: rm microsoft.gpg
+    - name: Add vscode repo
+      ansible.builtin.deb822_repository:
+        name: vscode
+        types: deb
+        uris: https://packages.microsoft.com/repos/code
+        suites: stable
+        components: main
+        signed_by: /usr/share/keyrings/microsoft.gpg
+        architectures: "{{ 'amd64' if ansible_facts['architecture'] == 'x86_64' else ansible_facts['architecture'] }}"
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
   when: "'code' not in ansible_facts.packages"
+
+- name: Install vscode
+  ansible.builtin.apt:
+    name: code
+    state: present
+
+- name: Install vscode extensions
+  include_tasks: "install_extension.yaml"
+  loop: "{{ extensions }}"
+  loop_control:
+    loop_var: extension
+
+- name: Copy over settings
+  ansible.builtin.copy:
+    src: ./files/settings.json
+    dest: "{{ ansible_facts['user_dir'] }}/.config/Code/User/settings.json"
+    owner: "{{ ansible_facts['user_id'] }}"
+    group: "{{ ansible_facts['user_id'] }}"
+    mode: 0664

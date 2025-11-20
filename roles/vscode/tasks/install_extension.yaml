@@ -1,0 +1,13 @@
+---
+- name: Check extension is installed
+  ansible.builtin.shell:
+    cmd: code --list-extensions | grep -q "{{ extension }}"
+  register: extension_installed
+  changed_when: false
+  failed_when: false
+  become: false
+- name: Install extension
+  ansible.builtin.command:
+    cmd: code --install-extension "{{ extension }}"
+  when: extension_installed.rc != 0
+  become: false

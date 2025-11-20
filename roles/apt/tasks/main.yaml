@@ -35,6 +35,11 @@
     update_cache: true
   when: debian_repo.changed or debian_sec_repo.changed
 
+- name: Install standalone packages
+  ansible.builtin.apt:
+    name: "{{ packages }}"
+    state: present
+
 - name: Set initial apt upgrade
   ansible.builtin.file:
     path: "{{ initial_upgrade_file }}"

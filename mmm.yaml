@@ -7,9 +7,8 @@
     - role: apt
       vars:
         initial_upgrade_file: "{{ apt.intial_upgrade_file }}"
+        packages: "{{ apt.standalone_packages }}"
     - role: user
-      vars:
-        main_user: "{{ user_main }}"
 
 - name: System setup
   hosts: local
@@ -17,14 +16,10 @@
   roles:
     - role: nvidia
 
-#- name: Setup nvidia
-#  hosts: local
-#  roles:
-#    - role: nvidia
-#      vars:
-#        deb_arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }}"
-#
-#- name: Setup vscode
-#  hosts: local
-#  roles:
-#    - role: vscode
+- name: Programs setup
+  hosts: local
+  become: true
+  roles:
+    - role: vscode
+      vars:
+        extensions: "{{ vscode.extensions }}"
