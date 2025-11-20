@@ -1,7 +1,11 @@
 ---
+- name: Install sudo
+  ansible.builtin.apt:
+    name: sudo
+    state: present
+
 - name: Manage user
   ansible.builtin.user:
-    name: "{{ sudo_user }}"
+    name: "{{ main_user }}"
     groups: sudo
     append: true
-  when: "'sudo' in ansible_facts.packages"

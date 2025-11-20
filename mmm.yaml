@@ -1,10 +1,15 @@
 ---
-- name: setup
+- name: Initial setup
   hosts: local
   become: true
-  tasks:
-    - name: setup tasks
-      ansible.builtin.setup:
+  roles:
+    - role: init
+    - role: apt
+      vars:
+        initial_upgrade_file: "{{ apt.intial_upgrade_file }}"
+    - role: user
+      vars:
+        main_user: "{{ user_main }}"
 
 #- name: Setup apt
 #  hosts: localhost
