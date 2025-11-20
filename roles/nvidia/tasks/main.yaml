@@ -1,32 +1,38 @@
 ---
-- name: Setup non-free apt repos for nvidia
-  block:
-    - ansible.builtin.deb822_repository:
-        name: debian-non-free
-        types:
-          - deb
-          - deb-src
-        uris: http://deb.debian.org/debian/
-        suites:
-          - trixie
-          - trixie-updates
-        components: non-free
-        signed_by: /usr/share/keyrings/debian-archive-keyring.gpg
-    - ansible.builtin.deb822_repository:
-        name: debian-sec-non-free
-        types:
-          - deb
-          - deb-src
-        uris: https://security.debian.org/debian-security
-        suites: trixie-security
-        components: non-free
-        signed_by: /usr/share/keyrings/debian-archive-keyring.gpg
-    - ansible.builtin.apt:
-        update_cache: yes
+- name: Add non-free debian repo
+  ansible.builtin.deb822_repository:
+    name: debian-non-free
+    types:
+      - deb
+      - deb-src
+    uris: http://deb.debian.org/debian/
+    suites:
+      - "{{ ansible_facts['distribution_release'] }}"
+      - "{{ ansible_facts['distribution_release'] }}-updates"
+    components: non-free
+    signed_by: /usr/share/keyrings/debian-archive-keyring.gpg
+  register: non_free_debian_repo
+
+- name: Add non-free debian security repo
+  ansible.builtin.deb822_repository:
+    name: debian-sec-non-free
+    types:
+      - deb
+      - deb-src
+    uris: https://security.debian.org/debian-security
+    suites: "{{ ansible_facts['distribution_release'] }}-security"
+    components: non-free
+    signed_by: /usr/share/keyrings/debian-archive-keyring.gpg
+  register: non_free_debian_security_repo
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+  when: non_free_debian_repo.changed or non_free_debian_security_repo.changed
 
 - name: Install linux Headers
   ansible.builtin.apt:
-    name: "linux-headers-{{ deb_arch }}"
+    name: "linux-headers-{{ 'amd64' if ansible_facts['architecture'] == 'x86_64' else ansible_facts['architecture'] }}"
     state: present
 
 - name: Install nvidia packages

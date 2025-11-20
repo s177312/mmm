@@ -2,7 +2,6 @@
 apt:
   intial_upgrade_file: /etc/.ansible_initial_apt_upgrade
   packages:
-    - apt-transport-https
     - bash
     - curl
     - wget

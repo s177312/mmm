@@ -11,28 +11,12 @@
       vars:
         main_user: "{{ user_main }}"
 
-#- name: Setup apt
-#  hosts: localhost
-#  connection: local
-#  become: true
-#  roles:
-#    - role: apt
-#      vars:
-#        setup_file: "{{ apt.setup_file }}"
-#        packages: "{{ apt.packages }}"
-#
-#- name: Setup github-cli
-#  hosts: local
-#  roles:
-#    - role: gh
-#
-#- name: Setup sudo
-#  hosts: local
-#  roles:
-#    - role: sudo
-#      vars:
-#        sudo_user: "{{ user.name }}"
-#
+- name: System setup
+  hosts: local
+  become: true
+  roles:
+    - role: nvidia
+
 #- name: Setup nvidia
 #  hosts: local
 #  roles:
