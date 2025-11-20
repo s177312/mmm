@@ -1,4 +1,4 @@
-group_vars/local/.custom.yaml
+group_vars/local/dynamic.yaml
 .become_password.txt
 .vault_password.txt
 

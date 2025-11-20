@@ -19,8 +19,8 @@ SCRIPT_ARGS[cleanup_secrets]=0
 # All paths are relative to the directory the script is located in
 readonly BECOME_PASSWORD_FILE='.become_password.txt'
 readonly VAULT_PASSWORD_FILE='.vault_password.txt'
-readonly CUSTOM_VARS_FILE='group_vars/local/.custom.yaml'
-readonly CUSTOM_VARS_FILE_TEMPLATE='template.custom.yaml'
+readonly DYNAMIC_VARS_FILE='group_vars/local/dynamic.yaml'
+readonly DYNAMIC_VARS_FILE_TEMPLATE='template.dynamic.yaml'
 readonly VENV_DIR='.venv'
 readonly PLAYBOOK_FILE='mmm.yaml'
 
@@ -245,7 +245,7 @@ read_var() {
     ret_val="${var}"
 }
 
-read_custom_vars_2_file() {
+read_dynamic_vars_2_file() {
     local -r file_path="$1"
     local -r template_file_path="$2"
     local -r update_vars="$3"
@@ -268,24 +268,24 @@ read_custom_vars_2_file() {
     local file_contents=''
     file_contents+='---'$'\n'
 
-    declare -A custom_vars
+    declare -A dynamic_vars
 
-    # Create custom vars map for bash from template with default values
+    # Create dynamic vars map for bash from template with default values
     while IFS="=" read -r key value; do
-        custom_vars["${key:1}"]="${value::-1}"
+        dynamic_vars["${key:1}"]="${value::-1}"
     done < <(yq '. | to_entries | .[] | "\(.key)=\(.value)"' "${template_file_path}")
 
-    # Create the actual contents for custom vars file
-    for key in "${!custom_vars[@]}"; do
-        if continue_script 'no' "Do you want to keep the default value of ${key} as \"${custom_vars[${key}]}\"?"; then
-            file_contents+="${key}: \"${custom_vars[${key}]}\""$'\n'
+    # Create the actual contents for dynamic vars file
+    for key in "${!dynamic_vars[@]}"; do
+        if continue_script 'no' "Do you want to keep the default value of ${key} as \"${dynamic_vars[${key}]}\"?"; then
+            file_contents+="${key}: \"${dynamic_vars[${key}]}\""$'\n'
             continue
         fi
 
-        local user_custom_var=''
-        read_var user_custom_var "${key}"
+        local user_dynamic_var=''
+        read_var user_dynamic_var "${key}"
 
-        file_contents+="${key}: \"${user_custom_var}\""$'\n'
+        file_contents+="${key}: \"${user_dynamic_var}\""$'\n'
     done
 
     if (( update_vars == 1 )); then
@@ -370,8 +370,8 @@ main() {
     read_secret_2_file 'become password' "${BECOME_PASSWORD_FILE}" "${SCRIPT_ARGS[update]}"
     read_secret_2_file 'vault password' "${VAULT_PASSWORD_FILE}" "${SCRIPT_ARGS[update]}"
 
-    echo 'Checking custom ansible vars...'
-    read_custom_vars_2_file "${CUSTOM_VARS_FILE}" "${CUSTOM_VARS_FILE_TEMPLATE}" "${SCRIPT_ARGS[update]}"
+    echo 'Checking dynamic ansible vars...'
+    read_dynamic_vars_2_file "${DYNAMIC_VARS_FILE}" "${DYNAMIC_VARS_FILE_TEMPLATE}" "${SCRIPT_ARGS[update]}"
 
     echo 'Checking virtual environment...'
     create_virtual_env "${VENV_DIR}" "${SCRIPT_ARGS[update]}"
