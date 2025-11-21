@@ -5,7 +5,7 @@ Ansible configuration for setting up new Debian machine.
 
 ## Usage
 
-1. Clone the repo to your machine.
+1. Clone or download the repo to your machine.
 2. Make script *mmm.sh* executable.
 3. Run script *mmm.sh*(pass along argument -h|--help for more information).
 3. You are done!
@@ -18,6 +18,10 @@ Ansible configuration for setting up new Debian machine.
 
 
 ## Todo
+
+- Make script ask if it should copy the repo with all stuff to the correct place handled by ansible
+- Also add into script simple interactive spot so it asks for ssh key stuff and you can upload the key to github and stuff
+- Git role should handle this mmm repo so it works perfectly later.
 
 - Fix web-eid role so it works somehow on Debian 13.
 - If vault will get more usage, add functionality to script, so that it first asks whether you want write your vault password or copy a file from somewhere, and then go on as it is now, or copy the file to the correct place, same when updating.
