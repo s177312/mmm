@@ -33,3 +33,5 @@
         extensions: "{{ vscode.extensions }}"
     - role: chrome
       tags: chrome
+    - role: docker
+      tags: docker
