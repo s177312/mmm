@@ -2,6 +2,7 @@
 apt:
   intial_upgrade_file: /etc/.ansible_initial_apt_upgrade
   standalone_packages:
+    - apt-transport-https
     - bash
     - curl
     - wget
@@ -13,6 +14,8 @@ apt:
     - sudo
     - python3
     - python3-pip
+    - python3-venv
+    - yq
 vscode:
   extensions:
     - mikestead.dotenv
