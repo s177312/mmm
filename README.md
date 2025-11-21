@@ -19,5 +19,4 @@ Ansible configuration for setting up new Debian machine.
 
 ## Todo
 
-- Gathering package facts to make every role atomic is slow as shit, so pretty sure using dpkg command somehting something is better with a registered variable. Make it happen later.
-- Id-card software role "web_eid" is missing packages in debian repos. Fix!
+- Fix web-eid role so it works somehow on Debian 13.
