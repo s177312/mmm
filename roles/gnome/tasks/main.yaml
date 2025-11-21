@@ -1,0 +1,7 @@
+---
+- name: Change gnome settings
+  block:
+    - name: Disable ambient lighting
+      ansible.builtin.command:
+        cmd: gsettings set org.gnome.settings-daemon.plugins.power ambient-enabled false
+      changed_when: false

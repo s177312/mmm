@@ -21,6 +21,9 @@
   roles:
     - role: nvidia
       tags: nvidia
+    - role: gnome
+      tags: gnome
+      become: false
 
 - name: Software setup
   hosts: local
