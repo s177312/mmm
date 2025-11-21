@@ -1,0 +1,19 @@
+---
+- name: Gather package facts
+  ansible.builtin.package_facts:
+    manager: apt
+
+- name: Setup web-eid repos and key
+  block:
+    - name: Setup web-eid repos and keyfile
+      ansible.builtin.script:
+        cmd: ./files/custom-install-web-eid.sh
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+  when: "'web-eid' not in ansible_facts['packages']"
+
+- name: Install web-eid
+  ansible.builtin.apt:
+    name: web-eid
+    state: present
