@@ -15,6 +15,7 @@ declare -A SCRIPT_ARGS
 SCRIPT_ARGS[update]=0
 SCRIPT_ARGS[interactive]=0
 SCRIPT_ARGS[cleanup_secrets]=0
+SCRIPT_ARGS[ansible_tags]=''
 
 # All paths are relative to the directory the script is located in
 readonly BECOME_PASSWORD_FILE='.become_password.txt'
@@ -36,6 +37,10 @@ parse_args() {
                 print_help
                 exit 0
                 ;;
+            --tags)
+                SCRIPT_ARGS[ansible_tags]="$2"
+                shift 2
+                ;;
             --update)
                 SCRIPT_ARGS[update]=1
                 shift
@@ -55,6 +60,10 @@ parse_args() {
             -h)
                 print_help
                 exit 0
+                ;;
+            -t)
+                SCRIPT_ARGS[ansible_tags]="$2"
+                shift 2
                 ;;
             -u)
                 SCRIPT_ARGS[update]=1
@@ -88,6 +97,7 @@ Usage: $0 [options]
 Options:
   -u, --update           Do over the script initialization by picking which things to update and which do not update
   -i, --interactive      Stay in the ansible virtual environment after everything has been set up
+  -t/--tags TAGS         Specify which tags to run with ansible-playbook. Does nothing in combination with -i/--interactive. 
   -h, --help             Show this help text
 
 Example:
@@ -326,8 +336,8 @@ run_ansible() {
     local -r go_interactive="$2"
 
     if (( go_interactive == 1 )); then
-        echo "Run command \"ansible-playbook ${playbook_file_path}\" to run the main playbook and do other stuff with ansible."
-        echo "Press \"Ctrl+d\" to exit the virtual environment terminal session and continue on with the script!"
+        echo 'Run command "ansible-playbook mmm.yaml" to run the main playbook and do other stuff with ansible.'
+        echo 'Press "Ctrl+d" to exit the virtual environment terminal session and continue on with the script!'
 
         (
             source .venv/bin/activate
@@ -335,11 +345,16 @@ run_ansible() {
             bash --noprofile --norc
         )
     else
-        echo "Running command \"ansible-playbook ${playbook_file_path}\"!"
-
         (
             source .venv/bin/activate
-            ansible-playbook mmm.yaml
+            
+            if [[ -z "${SCRIPT_ARGS[ansible_tags]}" ]]; then
+                echo "Running command \"ansible-playbook mmm.yaml\"!"
+                ansible-playbook mmm.yaml
+            else
+                echo "Running command \"ansible-playbook mmm.yaml --tags ${SCRIPT_ARGS[ansible_tags]}\"!"
+                ansible-playbook mmm.yaml --tags "${SCRIPT_ARGS[ansible_tags]}"
+            fi
         )
     fi
 }

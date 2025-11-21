@@ -19,6 +19,5 @@ Ansible configuration for setting up new Debian machine.
 
 ## Todo
 
-- Add tags for every separate play in playbook and add tags argument for mmm.sh script.
 - Gathering package facts to make every role atomic is slow as shit, so pretty sure using dpkg command somehting something is better with a registered variable. Make it happen later.
-
+- Id-card software role "web_eid" is missing packages in debian repos. Fix!

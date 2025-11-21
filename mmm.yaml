@@ -1,26 +1,35 @@
 ---
 - name: Initial setup
   hosts: local
+  tags: init_setup
   become: true
   roles:
     - role: init
+      tags: init
     - role: apt
+      tags: apt
       vars:
         initial_upgrade_file: "{{ apt.intial_upgrade_file }}"
         packages: "{{ apt.standalone_packages }}"
     - role: user
+      tags: user
 
 - name: System setup
   hosts: local
+  tags: system_setup
   become: true
   roles:
     - role: nvidia
+      tags: nvidia
 
-- name: Programs setup
+- name: Software setup
   hosts: local
+  tags: software_setup
   become: true
   roles:
     - role: vscode
+      tags: vscode
       vars:
         extensions: "{{ vscode.extensions }}"
     - role: chrome
+      tags: chrome
