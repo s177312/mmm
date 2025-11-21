@@ -20,3 +20,4 @@ Ansible configuration for setting up new Debian machine.
 ## Todo
 
 - Fix web-eid role so it works somehow on Debian 13.
+- If vault will get more usage, add functionality to script, so that it first asks whether you want write your vault password or copy a file from somewhere, and then go on as it is now, or copy the file to the correct place, same when updating.

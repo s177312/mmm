@@ -6,9 +6,12 @@
       - gpg
     state: present
 
-- name: Gather package facts
-  ansible.builtin.package_facts:
-    manager: apt
+- name: Check vscode is installed
+  ansible.builtin.shell:
+    cmd: dpkg -s code &>/dev/null
+  register: code_installed
+  changed_when: false
+  failed_when: false
 
 - name: Setup vscode repo
   block:
@@ -33,7 +36,7 @@
     - name: Update apt cache
       ansible.builtin.apt:
         update_cache: true
-  when: "'code' not in ansible_facts.packages"
+  when: code_installed.rc != 0
 
 - name: Install vscode
   ansible.builtin.apt:

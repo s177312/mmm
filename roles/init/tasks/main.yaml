@@ -1,3 +1,7 @@
 ---
 - name: Gather facts
   ansible.builtin.setup:
+
+- name: Gather apt package facts
+  ansible.builtin.package_facts:
+    manager: apt

@@ -38,6 +38,12 @@ parse_args() {
                 exit 0
                 ;;
             --tags)
+                if [ -z "${2+x}" ]; then
+                    echo "Option value for --tags is missing!"
+                    print_help
+                    exit 1
+                fi
+
                 SCRIPT_ARGS[ansible_tags]="$2"
                 shift 2
                 ;;
@@ -62,6 +68,12 @@ parse_args() {
                 exit 0
                 ;;
             -t)
+                if [ -z "${2+x}" ]; then
+                    echo "Option value for -t is missing!"
+                    print_help
+                    exit 1
+                fi
+
                 SCRIPT_ARGS[ansible_tags]="$2"
                 shift 2
                 ;;

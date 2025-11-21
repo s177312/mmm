@@ -40,7 +40,7 @@
     name: "{{ packages }}"
     state: present
 
-- name: Set initial apt upgrade
+- name: Set initial apt upgrade file
   ansible.builtin.file:
     path: "{{ initial_upgrade_file }}"
     state: touch
@@ -52,7 +52,3 @@
   ansible.builtin.apt:
     upgrade: true
   when: initial_apt_upgrade.changed
-
-- name: Gather package facts
-  ansible.builtin.package_facts:
-    manager: apt

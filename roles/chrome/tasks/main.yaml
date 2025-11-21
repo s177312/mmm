@@ -1,7 +1,10 @@
 ---
-- name: Gather package facts
-  ansible.builtin.package_facts:
-    manager: apt
+- name: Check chrome is installed
+  ansible.builtin.shell:
+    cmd: dpkg -s google-chrome-stable &>/dev/null
+  register: chrome_installed
+  changed_when: false
+  failed_when: false
 
 - name: Install Google chrome
   block:
@@ -15,4 +18,4 @@
       environment:
         # Pass along path since it cries when installing this shit without it
         PATH: "{{ ansible_facts['env'].PATH }}:/sbin:/usr/local/sbin:/usr/sbin"
-  when: "'google-chrome-stable' not in ansible_facts['packages']"
+  when: chrome_installed.rc != 0
