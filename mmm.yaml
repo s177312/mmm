@@ -38,3 +38,5 @@
       tags: chrome
     - role: docker
       tags: docker
+    - role: git
+      tags: git
