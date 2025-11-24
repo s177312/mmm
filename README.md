@@ -18,10 +18,16 @@ Ansible configuration for setting up new Debian machine.
 
 
 ## Todo
+- git role should loop over repos from vars and clone all of those to repos folder, if ssh connection works...
+
+
+1. 3 ways to run the script:
+    - Straight from the web
+    - From the repo, from wherever
+    - From the repo, in the correct location
 
 - Make script ask if it should copy the repo with all stuff to the correct place handled by ansible
 - Also add into script simple interactive spot so it asks for ssh key stuff and you can upload the key to github and stuff
-- Git role should handle this mmm repo so it works perfectly later.
 
 - Fix web-eid role so it works somehow on Debian 13.
 - If vault will get more usage, add functionality to script, so that it first asks whether you want write your vault password or copy a file from somewhere, and then go on as it is now, or copy the file to the correct place, same when updating.

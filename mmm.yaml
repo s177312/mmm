@@ -40,3 +40,10 @@
       tags: docker
     - role: git
       tags: git
+      vars:
+        repos_dir: "{{ git.repos_dir }}"
+        mmm_repo: "{{ git.mmm_repo }}"
+        system_user_name: "{{ git.system.user.name }}"
+        system_user_email: "{{ git.system.user.email }}"
+        global_user_name: "{{ git.global.user.name }}"
+        global_user_email: "{{ git.global.user.email }}"

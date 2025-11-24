@@ -19,3 +19,15 @@ apt:
 vscode:
   extensions:
     - mikestead.dotenv
+git:
+  repos_dir: Repos # relative to user's home directory
+  mmm_repo: git@github.com:s177312/mmm.git
+  repos:
+  global:
+    user:
+      name: Silver Tammsoo
+      email: 31721638+s177312@users.noreply.github.com
+  system:
+    user:
+      name: s177312
+      email: 31721638+s177312@users.noreply.github.com

@@ -4,3 +4,96 @@
     name: git
     state: present
 
+- name: Create repos dir
+  ansible.builtin.file:
+    path: "{{ ansible_facts['user_dir'] }}/{{ repos_dir }}"
+    state: directory
+    mode: 0755
+    owner: "{{ ansible_facts['user_id'] }}"
+    group: "{{ ansible_facts['user_id'] }}"
+
+- name: Check git system user name
+  ansible.builtin.command:
+    cmd: git config --system --get user.name
+  register: system_user_name_check
+  changed_when: false
+
+- name: Check git system user email
+  ansible.builtin.command:
+    cmd: git config --system --get user.email
+  register: system_user_email_check
+  changed_when: false
+
+- name: Check git global user name
+  ansible.builtin.command:
+    cmd: git config --global --get user.name
+  register: global_user_name_check
+  changed_when: false
+  become: false
+
+- name: Check git global user email
+  ansible.builtin.command:
+    cmd: git config --global --get user.email
+  register: global_user_email_check
+  changed_when: false
+  become: false
+
+- name: Set git system user name
+  ansible.builtin.command:
+    argv:
+      - git
+      - config
+      - --system
+      - user.name
+      - "{{ system_user_name }}"
+  when: system_user_name_check.stdout != system_user_name
+
+- name: Set git system user email
+  ansible.builtin.command:
+    argv:
+      - git
+      - config
+      - --system
+      - user.email
+      - "{{ system_user_email }}"
+  when: system_user_email_check.stdout != system_user_email
+
+- name: Set git global user name
+  ansible.builtin.command:
+    argv:
+      - git
+      - config
+      - --global
+      - user.name
+      - "{{ global_user_name }}"
+  when: global_user_name_check.stdout != global_user_name
+  become: false
+
+- name: Set git global user email
+  ansible.builtin.command:
+    argv:
+      - git
+      - config
+      - --global
+      - user.email
+      - "{{ global_user_email }}"
+  when: global_user_email_check.stdout != global_user_email
+  become: false
+
+# If ssh connection to github doesn't work, show failed task, but continue with other tasks.
+- name: Check github ssh connection
+  ansible.builtin.command:
+    cmd: ssh -T git@github.com
+  become: false
+  changed_when: false
+  register: check_github_ssh_connection
+  failed_when: check_github_ssh_connection.rc > 1
+  ignore_errors: true
+
+
+- name: Manage mmm repo
+  ansible.builtin.git:
+    repo: "{{ mmm_repo }}"
+    dest: "{{ ansible_facts['user_dir'] }}/{{ repos_dir }}/{{ mmm_repo | replace('.git','') | split('/') | last }}"
+  become: false
+  when: check_github_ssh_connection.rc <= 1
