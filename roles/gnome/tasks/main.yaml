@@ -1,7 +1,17 @@
 ---
-- name: Change gnome settings
-  block:
-    - name: Disable ambient lighting
-      ansible.builtin.command:
-        cmd: gsettings set org.gnome.settings-daemon.plugins.power ambient-enabled false
-      changed_when: false
+- name: Manage gsettings
+  include_tasks: manage_gsetting.yaml
+  loop: "{{ settings }}"
+  loop_control:
+    loop_var: setting
+
+#- name: Change gnome settings
+#  block:
+#    - name: Disable ambient lighting
+#      ansible.builtin.command:
+#        cmd: gsettings set org.gnome.settings-daemon.plugins.power ambient-enabled false
+#      changed_when: false
+#    - name: Enable batter percentage
+#      ansible.builtin.command:
+#        cmd: gsettings set org.gnome.desktop.interface show-battery-percentage true
+#      changed_when: false

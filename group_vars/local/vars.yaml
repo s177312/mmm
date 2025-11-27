@@ -31,3 +31,51 @@ git:
     user:
       name: s177312
       email: 31721638+s177312@users.noreply.github.com
+gnome:
+  settings:
+    - key: ambient-enabled
+      schema: org.gnome.settings-daemon.plugins.power
+      value: "false"
+    - key: show-battery-percentage
+      schema: org.gnome.desktop.interface
+      value: "true"
+    - key: idle-dim
+      schema: org.gnome.settings-daemon.plugins.power
+      value: "false"
+    - key: power-saver-profile-on-low-battery
+      schema: org.gnome.settings-daemon.plugins.power
+      value: "true"
+    - key: idle-delay
+      schema: org.gnome.desktop.session
+      value: "uint32 600"
+    - key: sleep-inactive-battery-type
+      schema: org.gnome.settings-daemon.plugins.power
+      value: "'suspend'"
+    - key: sleep-inactive-battery-timeout
+      schema: org.gnome.settings-daemon.plugins.power
+      value: "1200"
+    - key: sleep-inactive-ac-type
+      schema: org.gnome.settings-daemon.plugins.power
+      value: "'nothing'"
+    - key: enable-hot-corners
+      schema: org.gnome.desktop.interface
+      value: "false"
+    - key: edge-tiling
+      schema: org.gnome.mutter
+      value: "false"
+    - key: current-workspace-only
+      schema: org.gnome.shell.app-switcher
+      value: "false"
+    - key: workspaces-only-on-primary
+      schema: org.gnome.mutter
+      value: "true"
+    - key: color-scheme
+      schema: org.gnome.desktop.interface
+      value: "'prefer-dark'"
+    - key: history-enabled
+      schema: org.gnome.desktop.screen-time-limits
+      value: "false"
+    - key: daily-limit-enabled
+      schema: org.gnome.desktop.screen-time-limits
+      value: "false"
+    

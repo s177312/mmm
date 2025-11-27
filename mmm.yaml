@@ -23,7 +23,8 @@
       tags: nvidia
     - role: gnome
       tags: gnome
-      become: false
+      vars:
+        settings: "{{ gnome.settings }}"
 
 - name: Software setup
   hosts: local
