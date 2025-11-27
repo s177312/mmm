@@ -44,7 +44,7 @@
     state: present
 
 - name: Install vscode extensions
-  include_tasks: "install_extension.yaml"
+  include_tasks: ./install_extension.yaml
   loop: "{{ extensions }}"
   loop_control:
     loop_var: extension
