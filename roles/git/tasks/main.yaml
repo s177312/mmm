@@ -90,7 +90,6 @@
   failed_when: check_github_ssh_connection.rc > 1
   ignore_errors: true
 
-
 - name: Manage mmm repo
   ansible.builtin.git:
     repo: "{{ mmm_repo }}"
