@@ -32,7 +32,7 @@
 
 - name: Install linux Headers
   ansible.builtin.apt:
-    name: "linux-headers-{{ 'amd64' if ansible_facts['architecture'] == 'x86_64' else ansible_facts['architecture'] }}"
+    name: "linux-headers-{{ 'amd64' if ansible_facts.architecture == 'x86_64' else ansible_facts.architecture }}"
     state: present
 
 - name: Install nvidia packages

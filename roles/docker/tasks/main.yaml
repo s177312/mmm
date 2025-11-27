@@ -30,7 +30,7 @@
         name: docker
         types: deb
         uris: https://download.docker.com/linux/debian
-        suites: "{{ ansible_facts['distribution_release'] }}"
+        suites: "{{ ansible_facts.distribution_release }}"
         components: stable
         signed_by: /etc/apt/keyrings/docker.asc
     - name: Update apt cache
@@ -53,9 +53,9 @@
     name: docker
     state: present
 
-- name: "Ensure user {{ ansible_facts['user_id'] }} is in docker group"
+- name: "Ensure user {{ ansible_facts.user_id }} is in docker group"
   ansible.builtin.user:
-    name: "{{ ansible_facts['user_id'] }}"
+    name: "{{ ansible_facts.user_id }}"
     groups: docker
     append: true
 
