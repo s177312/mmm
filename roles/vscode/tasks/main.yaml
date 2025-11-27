@@ -32,7 +32,7 @@
         suites: stable
         components: main
         signed_by: /usr/share/keyrings/microsoft.gpg
-        architectures: "{{ 'amd64' if ansible_facts.architecture == 'x86_64' else ansible_facts.architecture. }}"
+        architectures: "{{ architecture }}"
     - name: Update apt cache
       ansible.builtin.apt:
         update_cache: true
@@ -52,7 +52,7 @@
 - name: Copy over settings
   ansible.builtin.copy:
     src: ./files/settings.json
-    dest: "{{ ansible_facts.user_dir }}/.config/Code/User/settings.json"
-    owner: "{{ ansible_facts.user_id }}"
-    group: "{{ ansible_facts.user_id }}"
+    dest: "{{ home }}/.config/Code/User/settings.json"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     mode: 0664

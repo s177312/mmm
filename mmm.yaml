@@ -10,8 +10,11 @@
       tags: apt
       vars:
         packages: "{{ apt.standalone_packages }}"
+        codename: "{{ ansible_facts.distribution_release }}"
     - role: user
       tags: user
+      vars:
+        user: "{{ ansible_facts.user_id }}"
 
 - name: System setup
   hosts: local
@@ -20,6 +23,9 @@
   roles:
     - role: nvidia
       tags: nvidia
+      vars:
+        codename: "{{ ansible_facts.distribution_release }}"
+        architecture: "{{ 'amd64' if ansible_facts.architecture == 'x86_64' else ansible_facts.architecture }}"
     - role: gnome
       tags: gnome
       vars:
@@ -33,14 +39,24 @@
     - role: vscode
       tags: vscode
       vars:
+        user: "{{ ansible_facts.user_id }}"
+        home: "{{ ansible_facts.user_dir }}"
+        architecture: "{{ 'amd64' if ansible_facts.architecture == 'x86_64' else ansible_facts.architecture }}"
         extensions: "{{ vscode.extensions }}"
     - role: chrome
       tags: chrome
+      vars:
+        path: "{{ ansible_facts.env.PATH }}"
     - role: docker
       tags: docker
+      vars:
+        codename: "{{ ansible_facts.distribution_release }}"
+        user: "{{ ansible_facts.user_id }}"
     - role: git
       tags: git
       vars:
+        user: "{{ ansible_facts.user_id }}"
+        home: "{{ ansible_facts.user_dir }}"
         repos_dir: "{{ git.repos_dir }}"
         mmm_repo: "{{ git.mmm_repo }}"
         system_user_name: "{{ git.system.user.name }}"

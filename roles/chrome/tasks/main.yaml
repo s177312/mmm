@@ -17,5 +17,5 @@
         deb: /tmp/google-chrome-stable_current_amd64.deb
       environment:
         # Pass along path since it cries when installing this shit without it
-        PATH: "{{ ansible_facts.env.PATH }}:/sbin:/usr/local/sbin:/usr/sbin"
+        PATH: "{{ path }}:/sbin:/usr/local/sbin:/usr/sbin"
   when: chrome_installed.rc != 0

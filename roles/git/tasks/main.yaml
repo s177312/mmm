@@ -6,11 +6,11 @@
 
 - name: Create repos dir
   ansible.builtin.file:
-    path: "{{ ansible_facts.user_dir }}/{{ repos_dir }}"
+    path: "{{ home }}/{{ repos_dir }}"
     state: directory
     mode: 0755
-    owner: "{{ ansible_facts.user_id }}"
-    group: "{{ ansible_facts.user_id }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
 
 - name: Check git system user name
   ansible.builtin.command:
@@ -93,6 +93,6 @@
 - name: Manage mmm repo
   ansible.builtin.git:
     repo: "{{ mmm_repo }}"
-    dest: "{{ ansible_facts.user_dir }}/{{ repos_dir }}/{{ mmm_repo | replace('.git','') | split('/') | last }}"
+    dest: "{{ home }}/{{ repos_dir }}/{{ mmm_repo | replace('.git','') | split('/') | last }}"
   become: false
   when: check_github_ssh_connection.rc <= 1
