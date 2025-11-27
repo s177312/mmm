@@ -1,6 +1,5 @@
 ---
 apt:
-  intial_upgrade_file: /etc/.ansible_initial_apt_upgrade
   standalone_packages:
     - apt-transport-https
     - bash
