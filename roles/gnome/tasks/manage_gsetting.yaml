@@ -1,13 +1,13 @@
 ---
 - name: Check gsetting
   ansible.builtin.command:
-    cmd: "gsettings get {{ setting['schema'] }} {{ setting['key'] }}"
+    cmd: "gsettings get {{ setting.schema }} {{ setting.key }}"
   register: check_gsetting
   changed_when: false
   become: false
 
-- name: "Set {{ setting['key'] }}"
+- name: "Set {{ setting.key }}"
   ansible.builtin.command:
-    cmd: "gsettings set {{ setting['schema'] }} {{ setting['key'] }} {{ setting['value'] }}"
+    cmd: "gsettings set {{ setting.schema }} {{ setting.key }} {{ setting.value }}"
   become: false
-  when: check_gsetting.stdout != setting['value']
+  when: check_gsetting.stdout != setting.value

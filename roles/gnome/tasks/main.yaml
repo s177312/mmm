@@ -1,6 +1,6 @@
 ---
 - name: Manage gsettings
-  include_tasks: manage_gsetting.yaml
+  include_tasks: ./manage_gsetting.yaml
   loop: "{{ settings }}"
   loop_control:
     loop_var: setting
