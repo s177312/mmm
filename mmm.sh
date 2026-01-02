@@ -324,6 +324,7 @@ main() {
 
     echo "${initial_dir}"
     echo "${script_dir}"
+    exit 0
     
     if [[ "$initial_dir" != "$script_dir" ]]; then
         print_line 'Moving to mmm root directory...'
