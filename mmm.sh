@@ -99,7 +99,7 @@ parse_args() {
 
 print_help() {
     cat <<EOF
-Usage: $0 [OPTION]...
+Usage: mmm.sh [OPTION]...
 
 Manage my machine using Ansible.
 The default Ansible command to be ran is "ansible-playbook mmm.yaml".
