@@ -316,8 +316,6 @@ main() {
 
     print_line 'Initializing...'
 
-    # TODO: Check if running from web, clone to some place if running from web. etc only if running from the web...
-
     local initial_dir="$PWD"
     local script_dir=''
     get_script_dir script_dir
