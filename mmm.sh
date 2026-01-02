@@ -321,9 +321,6 @@ main() {
     local initial_dir="$PWD"
     local script_dir=''
     get_script_dir script_dir
-
-    echo "${initial_dir}"
-    echo "${script_dir}"
     
     if [[ "$initial_dir" != "$script_dir" ]]; then
         print_line 'Moving to mmm root directory...'
