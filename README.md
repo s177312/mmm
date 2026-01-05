@@ -5,6 +5,11 @@ Ansible configuration for setting up new Debian machine.
 
 ## Usage
 
+Run script from url: `curl -fsSL "https://raw.githubusercontent.com/s177312/mmm/refs/heads/main/mmm.sh" | bash -s -- --web`
+
+or
+
+Run from the repo:
 1. Clone or download the repo to your machine.
 2. Make script *mmm.sh* executable.
 3. Run script *mmm.sh*(pass along argument -h|--help for more information).
