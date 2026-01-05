@@ -10,6 +10,7 @@ declare -A _ARGS=(
     [EXTRA]=''
     [UPDATE]=0
     [INTERACTIVE]=0
+    [WEB]=0
 )
 
 readonly -a _APT_PACKAGES=(
@@ -22,6 +23,7 @@ readonly -a _APT_PACKAGES=(
 readonly BECOME_PASSWORD_FILE='.become_password.txt'
 readonly VAULT_PASSWORD_FILE='.vault_password.txt'
 readonly VENV_DIR='.venv'
+readonly REPO_URL='https://github.com/s177312/mmm.git'
 # /GLOBALS
 
 
@@ -80,6 +82,10 @@ parse_args() {
                 _ARGS[UPDATE]=1
                 shift 1
                 ;;
+            -w|--web)
+                _ARGS[WEB]=1
+                shift 1
+                ;;
             --*)
 
                 print_error "Unknown long option \"$1\" passed to script!"
@@ -116,6 +122,9 @@ Options:
                      installed packages) and die.
   -u, --update       Rerun the initial script setup asking if any changes 
                      should be made.
+  -w, --web          When running the script from an URL, this option will make 
+                     it so a temporary git repo is setup to run the playbook
+                     once and then it is removed later. 
 
 Notes:
   This script may be lacking in some ways(ex: since bash parses options, too
@@ -318,11 +327,18 @@ main() {
 
     local initial_dir="$PWD"
     local script_dir=''
-    get_script_dir script_dir
-    
-    if [[ "$initial_dir" != "$script_dir" ]]; then
-        print_line 'Moving to mmm root directory...'
-        cd "${script_dir}"
+
+    if (( _ARGS[WEB] == 0 )); then
+        get_script_dir script_dir
+        
+        if [[ "$initial_dir" != "$script_dir" ]]; then
+            print_line 'Moving to mmm root directory...'
+            cd "${script_dir}"
+        fi
+    else
+        script_dir="$(mktemp --directory)"
+        git clone "${REPO_URL}" "${script_dir}/repo"
+        cd "${script_dir}/repo"
     fi
 
     install_apt_pkgs '_APT_PACKAGES'
@@ -336,6 +352,12 @@ main() {
         start_interactive_venv
     else
         run_venv_command "${_ARGS[COMMAND]} ${_ARGS[EXTRA]}"
+    fi
+
+    cd "${initial_dir}"
+
+    if (( _ARGS[WEB] == 1 )); then
+        rm -rf "${script_dir}"
     fi
 
     print_line 'Finishing...'

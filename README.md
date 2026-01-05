@@ -21,4 +21,3 @@ Ansible configuration for setting up new Debian machine.
 ## TODO
 
 - Try to automatically get web-eid working as a role
-
