@@ -2,7 +2,6 @@
 - name: Initial setup
   hosts: local
   tags: init_setup
-  become: true
   roles:
     - role: init
       tags: init
