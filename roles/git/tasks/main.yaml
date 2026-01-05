@@ -36,14 +36,12 @@
     cmd: git config --global --get user.name
   register: global_user_name_check
   changed_when: false
-  become: false
 
 - name: Check git global user email
   ansible.builtin.command:
     cmd: git config --global --get user.email
   register: global_user_email_check
   changed_when: false
-  become: false
 
 - name: Set git system user name
   ansible.builtin.command:
@@ -74,7 +72,6 @@
       - user.name
       - "{{ global_user_name }}"
   when: global_user_name_check.stdout != global_user_name
-  become: false
 
 - name: Set git global user email
   ansible.builtin.command:
@@ -85,4 +82,3 @@
       - user.email
       - "{{ global_user_email }}"
   when: global_user_email_check.stdout != global_user_email
-  become: false
