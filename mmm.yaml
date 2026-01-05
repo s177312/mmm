@@ -43,10 +43,8 @@
         home: "{{ ansible_facts.user_dir }}"
         architecture: "{{ 'amd64' if ansible_facts.architecture == 'x86_64' else ansible_facts.architecture }}"
         extensions: "{{ vscode.extensions }}"
-    - role: chrome
-      tags: chrome
-      vars:
-        path: "{{ ansible_facts.env.PATH }}"
+    - role: google-chrome
+      tags: google-chrome
     - role: docker
       tags: docker
       vars:
