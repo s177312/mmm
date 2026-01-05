@@ -1,6 +1,6 @@
 ---
 apt:
-  standalone_packages:
+  packages:
     - apt-transport-https
     - bash
     - curl

@@ -8,7 +8,7 @@
     - role: apt
       tags: apt
       vars:
-        packages: "{{ apt.standalone_packages }}"
+        packages: "{{ apt.packages }}"
     - role: user
       tags: user
 
