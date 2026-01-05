@@ -1,47 +1,20 @@
 ---
-- name: Install required packages
-  ansible.builtin.apt:
-    name:
-      - wget
-      - gpg
-    state: present
+- name: Stop vscode role when not correct architecture
+  ansible.builtin.meta: end_role
+  when: ansible_facts.architecture not in ['amd64', 'x86_64']
 
 - name: Check vscode is installed
-  ansible.builtin.shell:
-    cmd: dpkg -s code &>/dev/null
+  ansible.builtin.command: dpkg -s code
   register: code_installed
   changed_when: false
   failed_when: false
 
-- name: Setup vscode repo
-  block:
-    - name: Download vscode key and dearmor
-      ansible.builtin.command: 
-        cmd: wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
-    - name: Create vscode keyring
-      ansible.builtin.command:
-        cmd: install -D -o root -g root -m 644 microsoft.gpg /usr/share/keyrings/microsoft.gpg
-    - name: Cleanup downloaded key
-      ansible.builtin.command:
-        cmd: rm microsoft.gpg
-    - name: Add vscode repo
-      ansible.builtin.deb822_repository:
-        name: vscode
-        types: deb
-        uris: https://packages.microsoft.com/repos/code
-        suites: stable
-        components: main
-        signed_by: /usr/share/keyrings/microsoft.gpg
-        architectures: "{{ architecture }}"
-    - name: Update apt cache
-      ansible.builtin.apt:
-        update_cache: true
-  when: code_installed.rc != 0
-
-- name: Install vscode
+- name: Install vscode via .deb package
   ansible.builtin.apt:
-    name: code
+    deb: https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-arm64
     state: present
+  when: code_installed.rc != 0
+  become: true
 
 - name: Install vscode extensions
   include_tasks: ./install_extension.yaml
@@ -52,7 +25,7 @@
 - name: Copy over settings
   ansible.builtin.copy:
     src: ./files/settings.json
-    dest: "{{ home }}/.config/Code/User/settings.json"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    dest: "{{ ansible_facts.user_dir }}/.config/Code/User/settings.json"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
     mode: 0664

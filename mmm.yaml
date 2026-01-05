@@ -33,14 +33,10 @@
 - name: Software setup
   hosts: local
   tags: software_setup
-  become: true
   roles:
     - role: vscode
       tags: vscode
       vars:
-        user: "{{ ansible_facts.user_id }}"
-        home: "{{ ansible_facts.user_dir }}"
-        architecture: "{{ 'amd64' if ansible_facts.architecture == 'x86_64' else ansible_facts.architecture }}"
         extensions: "{{ vscode.extensions }}"
     - role: google-chrome
       tags: google-chrome
