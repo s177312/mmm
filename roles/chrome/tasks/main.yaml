@@ -1,21 +1,15 @@
 ---
-- name: Check chrome is installed
+- name: Check google chrome is installed
   ansible.builtin.shell:
-    cmd: dpkg -s google-chrome-stable &>/dev/null
+    cmd: dpkg -s google-chrome-stable
   register: chrome_installed
   changed_when: false
   failed_when: false
 
-- name: Install Google chrome
-  block:
-    - name: Download chrome .deb package
-      ansible.builtin.get_url:
-        url: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-        dest: /tmp/google-chrome-stable_current_amd64.deb
-    - name: Install Google chrome .deb package
-      ansible.builtin.apt:
-        deb: /tmp/google-chrome-stable_current_amd64.deb
-      environment:
-        # Pass along path since it cries when installing this shit without it
-        PATH: "{{ path }}:/sbin:/usr/local/sbin:/usr/sbin"
-  when: chrome_installed.rc != 0
+- name: Install google chrome via .deb package
+  ansible.builtin.apt:
+    deb: "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+    state: present
+  when:
+    - chrome_installed.rc != 0
+    - ansible_facts.architecture in ['amd64', 'x86_64']
