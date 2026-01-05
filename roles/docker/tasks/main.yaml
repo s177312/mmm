@@ -1,4 +1,10 @@
 ---
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: "{{ 60 * 60 * 12 }}"
+  become: true
+
 - name: Install prerequisites
   ansible.builtin.apt:
     name:
@@ -6,39 +12,37 @@
       - ca-certificates
       - curl
     state: present
+  become: true
 
 - name: Check docker is installed
-  ansible.builtin.shell:
-    cmd: dpkg -s docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin &>/dev/null
-  register: docker_installed
+  ansible.builtin.command: dpkg -s docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin 
+  register: docker_check
   changed_when: false
   failed_when: false
 
 - name: Setup docker repo
   block:
     - name: Create keyring file
-      ansible.builtin.command:
-        cmd: install -m 0755 -d /etc/apt/keyrings
+      ansible.builtin.command: install -m 0755 -d /etc/apt/keyrings
     - name: Download docker key file
-      ansible.builtin.command:
-        cmd: curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+      ansible.builtin.command: curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
     - name: Change key permissions
-      ansible.builtin.command:
-        cmd: chmod a+r /etc/apt/keyrings/docker.asc
+      ansible.builtin.command: chmod a+r /etc/apt/keyrings/docker.asc
     - name: Add docker repo
       ansible.builtin.deb822_repository:
         name: docker
         types: deb
         uris: https://download.docker.com/linux/debian
-        suites: "{{ codename }}"
+        suites: "{{ ansible_facts.distribution_release }}"
         components: stable
         signed_by: /etc/apt/keyrings/docker.asc
     - name: Update apt cache
       ansible.builtin.apt:
         update_cache: true
-  when: docker_installed.rc != 0
+  when: docker_check.rc != 0
+  become: true
 
-- name: Install docker
+- name: Install docker packages
   ansible.builtin.apt:
     name:
       - docker-ce
@@ -47,24 +51,29 @@
       - docker-buildx-plugin
       - docker-compose-plugin
     state: present
+  become: true
 
 - name: Ensure group docker exists
   ansible.builtin.group:
     name: docker
     state: present
+  become: true
 
-- name: "Ensure user {{ user }} is in docker group"
+- name: "Ensure user {{ ansible_facts.user_id }} is in docker group"
   ansible.builtin.user:
-    name: "{{ user }}"
+    name: "{{ ansible_facts.user_id }}"
     groups: docker
     append: true
+  become: true
 
 - name: Start docker service on boot
   ansible.builtin.service:
     name: docker
     enabled: true
+  become: true
 
 - name: Start containerd service on boot
   ansible.builtin.service:
     name: containerd
     enabled: true
+  become: true
