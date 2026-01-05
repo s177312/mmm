@@ -5,7 +5,7 @@ Ansible configuration for setting up new Debian machine.
 
 ## Usage
 
-Run script from url: `curl -fsSL "https://raw.githubusercontent.com/s177312/mmm/refs/heads/main/mmm.sh" | bash -s -- --web`
+Run script from url: `bash <(curl -s "https://raw.githubusercontent.com/s177312/mmm/refs/heads/main/mmm.sh") --web`
 
 or
 
