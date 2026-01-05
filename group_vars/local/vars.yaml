@@ -15,12 +15,13 @@ apt:
     - python3-pip
     - python3-venv
     - yq
+
 vscode:
   extensions:
     - mikestead.dotenv
+
 git:
   repos_dir: Repos
-  repos:
   global:
     user:
       name: Silver Tammsoo
@@ -29,6 +30,7 @@ git:
     user:
       name: s177312
       email: 31721638+s177312@users.noreply.github.com
+
 gnome:
   settings:
     - key: ambient-enabled
