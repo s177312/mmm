@@ -3,9 +3,11 @@
   ansible.builtin.apt:
     name: sudo
     state: present
+  become: true
 
 - name: Manage user
   ansible.builtin.user:
-    name: "{{ user }}"
+    name: "{{ ansible_facts.user_id }}"
     groups: sudo
     append: true
+  become: true

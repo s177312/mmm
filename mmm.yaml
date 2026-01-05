@@ -12,8 +12,6 @@
         codename: "{{ ansible_facts.distribution_release }}"
     - role: user
       tags: user
-      vars:
-        user: "{{ ansible_facts.user_id }}"
 
 - name: System setup
   hosts: local
