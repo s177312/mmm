@@ -9,7 +9,6 @@
       tags: apt
       vars:
         packages: "{{ apt.standalone_packages }}"
-        codename: "{{ ansible_facts.distribution_release }}"
     - role: user
       tags: user
 
