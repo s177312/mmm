@@ -18,9 +18,6 @@
   roles:
     - role: nvidia
       tags: nvidia
-      vars:
-        codename: "{{ ansible_facts.distribution_release }}"
-        architecture: "{{ 'amd64' if ansible_facts.architecture == 'x86_64' else ansible_facts.architecture }}"
     - role: gnome
       tags: gnome
       vars:
