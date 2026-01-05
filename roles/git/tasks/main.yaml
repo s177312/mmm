@@ -1,16 +1,23 @@
 ---
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: "{{ 60 * 60 * 12 }}"
+  become: true
+
 - name: Install git
   ansible.builtin.apt:
     name: git
     state: present
+  become: true
 
 - name: Create repos dir
   ansible.builtin.file:
-    path: "{{ home }}/{{ repos_dir }}"
+    path: "{{ ansible_facts.user_dir }}/{{ repos_dir }}"
     state: directory
     mode: 0755
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
 
 - name: Check git system user name
   ansible.builtin.command:
@@ -79,20 +86,3 @@
       - "{{ global_user_email }}"
   when: global_user_email_check.stdout != global_user_email
   become: false
-
-# If ssh connection to github doesn't work, show failed task, but continue with other tasks.
-- name: Check github ssh connection
-  ansible.builtin.command:
-    cmd: ssh -T git@github.com
-  become: false
-  changed_when: false
-  register: check_github_ssh_connection
-  failed_when: check_github_ssh_connection.rc > 1
-  ignore_errors: true
-
-- name: Manage mmm repo
-  ansible.builtin.git:
-    repo: "{{ mmm_repo }}"
-    dest: "{{ home }}/{{ repos_dir }}/{{ mmm_repo | replace('.git','') | split('/') | last }}"
-  become: false
-  when: check_github_ssh_connection.rc <= 1

@@ -19,8 +19,7 @@ vscode:
   extensions:
     - mikestead.dotenv
 git:
-  repos_dir: Repos # relative to user's home directory
-  mmm_repo: git@github.com:s177312/mmm.git
+  repos_dir: Repos
   repos:
   global:
     user:
