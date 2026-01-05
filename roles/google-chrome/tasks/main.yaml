@@ -4,8 +4,7 @@
   when: ansible_facts.architecture not in ['amd64', 'x86_64']
 
 - name: Check google chrome is installed
-  ansible.builtin.shell:
-    cmd: dpkg -s google-chrome-stable
+  ansible.builtin.command: dpkg -s google-chrome-stable
   register: chrome_installed
   changed_when: false
   failed_when: false
