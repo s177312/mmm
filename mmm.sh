@@ -325,6 +325,8 @@ main() {
 
     print_line 'Initializing...'
 
+    install_apt_pkgs '_APT_PACKAGES'
+
     local initial_dir="$PWD"
     local script_dir=''
 
@@ -340,8 +342,6 @@ main() {
         git clone "${REPO_URL}" "${script_dir}/repo"
         cd "${script_dir}/repo"
     fi
-
-    install_apt_pkgs '_APT_PACKAGES'
 
     read_secret_2_file 'become password' "${BECOME_PASSWORD_FILE}" "${_ARGS[UPDATE]}"
     read_secret_2_file 'vault password' "${VAULT_PASSWORD_FILE}" "${_ARGS[UPDATE]}"
