@@ -14,3 +14,19 @@
     deb: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
     state: present
   when: chrome_installed.rc != 0
+  become: true
+
+- name: Create extension preferences directory
+  ansible.builtin.file:
+    path: /opt/google/chrome/extensions
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+  become: true
+
+- name: Install chrome extensions
+  include_tasks: ./install_extension.yaml
+  loop: "{{ extensions }}"
+  loop_control:
+    loop_var: extension

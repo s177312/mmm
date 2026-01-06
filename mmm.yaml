@@ -33,6 +33,8 @@
         extensions: "{{ vscode.extensions }}"
     - role: google-chrome
       tags: google-chrome
+      vars:
+        extensions: "{{ chrome.extensions }}"
     - role: docker
       tags: docker
     - role: git

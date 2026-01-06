@@ -20,6 +20,11 @@ vscode:
   extensions:
     - mikestead.dotenv
 
+chrome:
+  extensions:
+    - id: akiljllkbielkidmammnifcnibaigelm
+      name: WebToEpub
+
 git:
   repos_dir: Repos
   global:
