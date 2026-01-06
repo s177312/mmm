@@ -17,7 +17,7 @@ readonly -a _APT_PACKAGES=(
     'python3'
     'python3-pip'
     'python3-venv'
-    'yq'
+    'git'
 )
 
 readonly BECOME_PASSWORD_FILE='.become_password.txt'
