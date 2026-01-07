@@ -1,9 +1,39 @@
 ---
+- name: Clear default sources.list file
+  ansible.builtin.copy:
+    content: ""
+    dest: /etc/apt/sources.list
+
+- name: Re-add base debian repo
+  ansible.builtin.deb822_repository:
+    name: debian
+    types:
+      - deb
+      - deb-src
+    uris: http://deb.debian.org/debian/
+    suites:
+      - "{{ codename }}"
+      - "{{ codename }}-updates"
+    components: main contrib non-free-firmware
+    signed_by: /usr/share/keyrings/debian-archive-keyring.gpg
+  register: debian_repo
+- name: Re-add base debian security repo
+  ansible.builtin.deb822_repository:
+    name: debian-sec
+    types:
+      - deb
+      - deb-src
+    uris: https://security.debian.org/debian-security
+    suites: "{{ codename }}-security"
+    components: main contrib non-free-firmware
+    signed_by: /usr/share/keyrings/debian-archive-keyring.gpg
+  register: debian_sec_repo
+
 - name: Update apt cache
   ansible.builtin.apt:
     update_cache: true
-    cache_valid_time: "{{ 60 * 60 * 12 }}"
   become: true
+  when: debian_repo.changed or debian_sec_repo.changed
 
 - name: "Install packages {{ packages | join(', ') }}"
   ansible.builtin.apt:
