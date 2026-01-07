@@ -13,8 +13,8 @@
       - deb-src
     uris: http://deb.debian.org/debian/
     suites:
-      - "{{ codename }}"
-      - "{{ codename }}-updates"
+      - "{{ ansible_facts.distribution_release }}"
+      - "{{ ansible_facts.distribution_release }}-updates"
     components: main contrib non-free-firmware
     signed_by: /usr/share/keyrings/debian-archive-keyring.gpg
   register: debian_repo
@@ -27,7 +27,7 @@
       - deb
       - deb-src
     uris: https://security.debian.org/debian-security
-    suites: "{{ codename }}-security"
+    suites: "{{ ansible_facts.distribution_release }}-security"
     components: main contrib non-free-firmware
     signed_by: /usr/share/keyrings/debian-archive-keyring.gpg
   register: debian_sec_repo
