@@ -11,7 +11,7 @@
 
 - name: Install vscode via .deb package
   ansible.builtin.apt:
-    deb: https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-arm64
+    deb: https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
     state: present
   when: code_installed.rc != 0
   become: true
