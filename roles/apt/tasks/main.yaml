@@ -3,6 +3,7 @@
   ansible.builtin.copy:
     content: ""
     dest: /etc/apt/sources.list
+  become: true
 
 - name: Re-add base debian repo
   ansible.builtin.deb822_repository:
