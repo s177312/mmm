@@ -7,6 +7,6 @@
 
 - name: "Set {{ setting.key }}"
   ansible.builtin.command:
-    cmd: "gsettings set {{ setting.schema }} {{ setting.key }} {{ setting.value }}"
+    cmd: "gsettings set {{ setting.schema }} {{ setting.key }} '{{ setting.value }}'"
   when: check_gsetting.stdout != setting.value
   become: true
