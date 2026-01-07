@@ -17,6 +17,8 @@
     components: main contrib non-free-firmware
     signed_by: /usr/share/keyrings/debian-archive-keyring.gpg
   register: debian_repo
+  become: true
+  
 - name: Re-add base debian security repo
   ansible.builtin.deb822_repository:
     name: debian-sec
@@ -28,6 +30,7 @@
     components: main contrib non-free-firmware
     signed_by: /usr/share/keyrings/debian-archive-keyring.gpg
   register: debian_sec_repo
+  become: true
 
 - name: Update apt cache
   ansible.builtin.apt:
